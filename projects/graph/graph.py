@@ -36,10 +36,6 @@ class Graph:
             return None
 
     def bft(self, starting_vertex):
-        """
-        Print each vertex in breadth-first order
-        beginning from starting_vertex.
-        """
         # Create a q and enqueue starting vertex
         qq = Queue()
         qq.enqueue([starting_vertex])
@@ -62,10 +58,6 @@ class Graph:
                     qq.enqueue(new_path)
 
     def dft(self, starting_vertex):
-        """
-        Print each vertex in depth-first order
-        beginning from starting_vertex.
-        """
         # Maintain list of visited nodes
         # Dive in till deepest node reached
         # Then back out to previous node
@@ -94,39 +86,68 @@ class Graph:
             print(current_vertex)
 
     def dft_recursive(self, starting_vertex):
-        """
-        Print each vertex in depth-first order
-        beginning from starting_vertex.
-
-        This should be done using recursion.
-        """
-        pass  # TODO
+        visited = set([starting_vertex])
+        def dive(current_vertex, visited):
+            print(current_vertex)
+            for vertex in self.get_neighbors(current_vertex):
+                if vertex not in visited:
+                    visited.add(vertex)
+                    dive(vertex, visited)
+        dive(starting_vertex, visited)
 
     def bfs(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing the shortest path from
-        starting_vertex to destination_vertex in
-        breath-first order.
-        """
-        pass  # TODO
+        visited = set()
+        queue = Queue()
+        queue.enqueue([starting_vertex])
+        while queue.size() != 0:
+            path = queue.dequeue()
+            current_vertex = path[-1]
+            if current_vertex == destination_vertex:
+                return path
+            else:
+                if current_vertex not in visited:
+                    visited.add(current_vertex)
+                    for vertex in self.get_neighbors(current_vertex):
+                        if vertex not in visited:
+                            new_path = path.copy()
+                            new_path.append(vertex)
+                            queue.enqueue(new_path)
+        return None
 
     def dfs(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing a path from
-        starting_vertex to destination_vertex in
-        depth-first order.
-        """
-        pass  # TODO
+        visited = set()
+        stack = Stack()
+        stack.push([starting_vertex])
+        while stack.size() != 0:
+            path = stack.pop()
+            current_vertex = path[-1]
+            if current_vertex == destination_vertex:
+                return path
+            else:
+                if current_vertex not in visited:
+                    visited.add(current_vertex)
+                    for vertex in self.get_neighbors(current_vertex):
+                        if vertex not in visited:
+                            new_path = path.copy()
+                            new_path.append(vertex)
+                            stack.push(new_path)
+        return None
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing a path from
-        starting_vertex to destination_vertex in
-        depth-first order.
-
-        This should be done using recursion.
-        """
-        pass  # TODO
+        visited = set()
+        def dive(current_vertex, destination_vertex, visited):
+            if current_vertex in visited:
+                return None
+            elif current_vertex == destination_vertex:
+                return [destination_vertex]
+            else:
+                visited.add(current_vertex)
+                for vertex in self.get_neighbors(current_vertex):
+                    search = dive(vertex, destination_vertex, visited)
+                    if search is not None:
+                        return [current_vertex] + search
+                return None
+        return dive(starting_vertex, destination_vertex, visited)
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
