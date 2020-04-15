@@ -35,6 +35,15 @@ class Graph:
         else:
             return None
 
+    def vertex_exists(self, vertex_id):
+        """
+        Return validity of vertex_id in graph instance
+        """
+        if vertex_id in self.vertices:
+            return True
+        else:
+            return False
+
     def bft(self, starting_vertex):
         # Create a q and enqueue starting vertex
         qq = Queue()
@@ -147,6 +156,31 @@ class Graph:
                     if search is not None:
                         return [current_vertex] + search
                 return None
+        return dive(starting_vertex, destination_vertex, visited)
+
+        # Recursion helper
+        def dive(current_vertex, destination_vertex, visited):
+            if current_vertex in visited:
+                # Don't repeat work
+                return None
+            elif current_vertex == destination_vertex:
+                # Base case -> reached destination_vertex
+                return [destination_vertex]
+            else:
+                # Build path
+                visited.add(current_vertex)
+                # Go thru neighbors
+                for vertex in self.get_neighbors(current_vertex):
+                    # Recurse with current vertex as starting point
+                    search = dive(vertex, destination_vertex, visited)
+                    # When search ends up finding the destination, return starting_vertex + search path
+                    if search is not None:
+                        return [current_vertex] + search
+
+                # No neighbors for node + search found nothing
+                return None
+
+        # Start recursion and return result
         return dive(starting_vertex, destination_vertex, visited)
 
 if __name__ == '__main__':
